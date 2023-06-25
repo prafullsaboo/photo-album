@@ -1,0 +1,31 @@
+.albumListHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  font: normal normal 600 14px/20px var(--font-family-open-sans);
+  color: var(--color-black);
+  margin: 10px 0;
+}
+.gridContainer {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+.gridBlock {
+  height: auto;
+  min-height: 70px;
+  display: flex;
+  border: 1px solid var( --color-black);
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-aliceblue);
+  padding-top: 0px !important;
+  color: var(--color-shades-black);
+  font: normal normal 600 10px/13px var(--font-family-open-sans);
+  margin: 10px 5px !important;
+  &:hover {
+    background-color: var(--color-shades-blue);
+    color: var(--color-white);
+    cursor: pointer;
+  }
+}

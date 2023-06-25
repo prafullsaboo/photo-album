@@ -1,0 +1,26 @@
+.userListHeading {
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  font: normal normal 600 14px/20px var(--font-family-open-sans);
+  color: var(--color-black);
+  margin: 10px 0;
+}
+.userList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center !important;
+  width: 70%;
+  height: 50px;
+  border: 1px solid var(--color-lightgrey);
+  background-color: var(--color-aliceblue);
+  font: normal normal 600 14px/20px var(--font-family-open-sans);
+  color: var(--color-black);
+  gap: 10px;
+  &:hover {
+    background-color: var(--color-shades-blue);
+    color: var(--color-white);
+    cursor: pointer;
+  }
+}
