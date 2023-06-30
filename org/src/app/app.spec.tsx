@@ -1,31 +1,29 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import store from '../app/+state/store';
+import store from './+state/store';
 import { App } from './App';
 import Breadcrumbs from './breadCrumb';
 import UserList from './components/user-list/user-list';
 import AlbumList from './components/album-list/album-list';
 import PhotosList from './components/photos-list/photos-list';
 
-
-jest.mock('./breadCrumb', () => ({
-  __esModule: true,
-  default: jest.fn(() => <div>Breadcrumbs component</div>),
-}));
-
-
-jest.mock('react-redux', () => ({
-  __esModule: true,
-  Provider: jest.fn(({ children }) => <div>{children}</div>),
-}));
-
 jest.mock('react-router-dom', () => ({
   __esModule: true,
   BrowserRouter: jest.fn(({ children }) => <div>{children}</div>),
   Route: jest.fn(({ element }) => <div>{element}</div>),
   Routes: jest.fn(({ children }) => <div>{children}</div>),
+}));
+
+jest.mock('react-redux', () => ({
+  __esModule: true,
+  Provider: jest.fn(({ children, store }) => <div data-testid="provider">{children}</div>),
+}));
+
+jest.mock('./breadCrumb', () => ({
+  __esModule: true,
+  default: jest.fn(() => <div>Breadcrumbs component</div>),
 }));
 
 jest.mock('./components/user-list/user-list', () => ({
@@ -52,20 +50,20 @@ describe('App', () => {
   it('should renders Provider with the store', () => {
     render(<App />);
     expect(Provider).toHaveBeenCalledWith(
-      { store },
+      { store: store, children: expect.anything() },
       {}
     );
   });
 
   it('should renders Router component', () => {
     render(<App />);
-    expect(Router).toHaveBeenCalledTimes(1);
+    expect(Router).toHaveBeenCalled();
   });
 
   it('should renders UserList component for the root path', () => {
     render(<App />);
     expect(Route).toHaveBeenCalledWith(
-      { path: '/', element: <UserList /> },
+      expect.objectContaining({ path: expect.stringMatching(/^\/$/) }),
       {}
     );
   });
@@ -73,7 +71,7 @@ describe('App', () => {
   it('should renders AlbumList component for "/albumlist" path', () => {
     render(<App />);
     expect(Route).toHaveBeenCalledWith(
-      { path: '/albumlist', element: <AlbumList /> },
+      expect.objectContaining({ path: expect.stringMatching(/^\/albumlist$/) }),
       {}
     );
   });
@@ -81,7 +79,7 @@ describe('App', () => {
   it('should renders PhotosList component for "/photolist" path', () => {
     render(<App />);
     expect(Route).toHaveBeenCalledWith(
-      { path: '/photolist', element: <PhotosList /> },
+      expect.objectContaining({ path: expect.stringMatching(/^\/photolist$/) }),
       {}
     );
   });

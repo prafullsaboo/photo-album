@@ -43,7 +43,7 @@ export function UserList(props: UserListProps) {
         Please select a user to see their Albums
       </Box>
       <List>
-        {userList.map((user) => (
+        {userList && userList.map((user) => (
           <ListItem
             className={styles.userList}
             key={user.id}

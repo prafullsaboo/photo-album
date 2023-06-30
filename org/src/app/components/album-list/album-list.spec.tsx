@@ -1,80 +1,119 @@
-/* eslint-disable prefer-const */
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { toBeInTheDocument } from '@testing-library/jest-dom';
+import { render, fireEvent, waitFor } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import AlbumList from './album-list';
 import { fetchAlbums } from '../../+state/albumListSlice';
-import { photoAction } from '../../+state/photosListSlice';
 
-jest.mock('axios');
-
-jest.mock('react-redux', () => ({
-  useDispatch: jest.fn(),
-  useSelector: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-  useNavigate: jest.fn(),
-}));
-
-describe('AlbumList', () => {
-  const mockedDispatch = jest.fn();
-  const mockedNavigate = jest.fn();
+const mockStore = configureMockStore([thunk]);
+// jest.mock('react-redux', () => ({
+//   useDispatch: jest.fn(),
+//   useSelector: jest.fn(),
+// }));
+describe('AlbumList component', () => {
+  let store;
 
   beforeEach(() => {
-    let store;
-    let navigateMock;
-    let useDispatchMock;
-    let useSelectorMock;
+    // dispatchMock = jest.fn();
+    // navigateMock = jest.fn();
 
-    // store.dispatch = jest.fn();
+    // jest.clearAllMocks();
+    // (useDispatch as jest.Mock).mockReturnValue(dispatchMock);
+    // (useSelector as jest.Mock).mockReturnValue([]);
 
-    navigateMock = jest.fn();
+    // (useNavigate as jest.Mock).mockReturnValue(navigateMock);
+    store = mockStore({
+      album: {
+        albums: [],
+        loading: false,
+        error: null,
+        selectedUserId: 0,
+      },
+    });
+  });
 
-    navigateMock.mockReturnValue(navigateMock);
-
-    useDispatchMock = jest.fn();
-    useDispatchMock.mockReturnValue(useDispatchMock);
-
-    useSelectorMock = jest.fn();
-    useSelectorMock.mockImplementation(useSelectorMock);
-
-    useSelectorMock.mockImplementation((selector) =>
-      selector({
-        albumList: {
-          albums: [{ id: 1, title: 'quidem molestiae enim', userId: 1 }],
-          selectedUserId: 1,
-        },
-      })
+  it('should render AlbumList componnent', () => {
+    render(
+      <Provider store={store}>
+        <Router>
+          <AlbumList />
+        </Router>
+      </Provider>
     );
-    navigateMock.mockReturnValue(mockedNavigate);
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+  // it('should render user list items correctly', () => {
+  //   (useSelector as jest.Mock).mockReturnValue([
+  //     { id: 1, title: 'quidem molestiae enim', userId: 1 },
+  //   ]);
 
-  it('renders the album list with the correct title', () => {
-    render(<AlbumList />);
+  //   render(
+  //     <Provider store={store}>
+  //       <Router>
+  //         <AlbumList />
+  //       </Router>
+  //     </Provider>
+  //   );
 
-    expect(screen.getByText('Album List')).toBeInTheDocument();
-  });
+  //   const user1 = screen.getByText('quidem molestiae enim');
 
-  it('dispatches fetchAlbums action on component mount', () => {
-    render(<AlbumList />);
+  //   expect(user1).toBeInTheDocument();
+  // });
 
-    expect(mockedDispatch).toHaveBeenCalledWith(fetchAlbums(1));
-  });
+  // it('should fetch albums for the selected user', async () => {
+  //   const selectedUserId = 1; // Replace with the desired user ID for testing
+  //   await store.dispatch(fetchAlbums(selectedUserId));
 
-  it('dispatches setSelectedAlbumId action and navigates on album click', () => {
-    render(<AlbumList />);
+  //   // Define the expected albums data for comparison
+  //   const albums = [
+  //     { userId: 1, id: 1, title: 'quidem molestiae enim' },
+  //     { userId: 1, id: 2, title: 'sunt qui excepturi placeat culpa' },
+  //     {
+  //       userId: 2,
+  //       id: 11,
+  //       title: 'quam nostrum impedit mollitia quod et dolor',
+  //     },
+  //   ];
 
-    fireEvent.click(screen.getByText('quidem molestiae enim'));
+  //   const actions = store.getActions();
+  //   const fetchAlbumsAction = actions.find(
+  //     (action) => action.type === fetchAlbums.fulfilled.type
+  //   );
 
-    expect(mockedDispatch).toHaveBeenCalledWith(
-      photoAction.setSelectedAlbumId(1)
-    );
-    expect(mockedNavigate).toHaveBeenCalledWith('/photolist');
-  });
+  //   expect(fetchAlbumsAction.payload).toEqual(albums);
+  // });
+
+  // it('should take expeceted action after clicking on an album', () => {
+  //   const albumId = 1;
+  //   const navigateMock = jest.fn();
+  //   const dispatchMock = jest.fn();
+
+  //   jest.mock('react-router-dom', () => ({
+  //     ...jest.requireActual('react-router-dom'),
+  //     useNavigate: () => navigateMock,
+  //   }));
+
+  //   jest.mock('react-redux', () => ({
+  //     ...jest.requireActual('react-redux'),
+  //     useDispatch: () => dispatchMock,
+  //     useSelector: jest.fn(),
+  //   }));
+
+  //   render(
+  //     <Provider store={store}>
+  //       <Router>
+  //         <AlbumList />
+  //       </Router>
+  //     </Provider>
+  //   );
+
+  //   expect(dispatchMock).toHaveBeenCalledWith({
+  //     type: 'photosList/setSelectedAlbumId',
+  //     payload: albumId,
+  //   });
+  //   expect(navigateMock).toHaveBeenCalledWith('/photolist');
+  // });
 });

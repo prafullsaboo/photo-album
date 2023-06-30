@@ -58,19 +58,20 @@ export function AlbumList(props: AlbumListProps) {
         spacing={{ xs: 2, md: 3 }}
         columns={{ xs: 4, sm: 8, md: 12 }}
       >
-        {filteredAlbum?.map((album: any) => (
-          <Grid
-            item
-            xs={3}
-            sm={4}
-            md={4}
-            key={album.id}
-            className={styles.gridBlock}
-            onClick={() => handleAlbumClick(album.id)}
-          >
-            <Typography>{album.title}</Typography>
-          </Grid>
-        ))}
+        {filteredAlbum &&
+          filteredAlbum.map((album: any) => (
+            <Grid
+              item
+              xs={3}
+              sm={4}
+              md={4}
+              key={album.id}
+              className={styles.gridBlock}
+              onClick={() => handleAlbumClick(album.id)}
+            >
+              <Typography>{album.title}</Typography>
+            </Grid>
+          ))}
       </Grid>
     </>
   );
